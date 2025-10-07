@@ -19,7 +19,9 @@ ___
 ## How to hire a switch?
 
 Call the installment:
-> npm i @al00x/jiggle-switch
+```
+npm i @al00x/jiggle-switch
+```
 
 ___
 
