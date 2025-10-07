@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin';
 import { jiggleSwitchConfigs, JiggleSwitchType } from './configs';
@@ -28,29 +28,41 @@ export const JiggleSwitch = ({
   const handleRef = useRef<HTMLDivElement>(null);
   const gradientRef = useRef(null);
   const stopColorRef = useRef(null);
+  const svgRef = useRef<SVGSVGElement>(null);
   const pathRef = useRef(null);
   const gRef = useRef(null);
   const animation = useRef<gsap.core.Timeline | null>(null);
+  const prevState = useRef<any>({});
 
   const initialBgColor = useRef<string>('');
+
+  const getDistanceX = () => {
+    const wrapperEl = selfRef.current!.firstChild! as HTMLDivElement;
+    return wrapperEl.clientWidth - wrapperEl.clientHeight;
+  };
 
   useEffect(() => {
     if (!selfRef.current) return;
 
     const initStyles = getComputedStyle(selfRef.current);
     initialBgColor.current = initStyles.backgroundColor ?? initStyles.background;
+    // TODO: Initial state causes visual flash/jump
+    gsap.set(svgRef.current, { x: value ? getDistanceX() : 0 });
+    console.log(value ? toggledColor : initialBgColor.current);
+    // I'm using setTimeout cause getComputedStyle has delay.
+    setTimeout(() => {
+      gsap.set(selfRef.current, { backgroundColor: value ? toggledColor : initialBgColor.current });
+    }, 1)
+
   }, []);
 
   const createAnimation = (state: boolean, interrupted?: boolean) => {
-    gsap.set(gRef.current, { rotate: 0, y: 0 });
+    // gsap.set(gRef.current, prevState.current);
     const timeline = gsap.timeline({ paused: true });
 
     const isTurningOn = state;
 
-    const wrapperEl = selfRef.current!.firstChild! as HTMLDivElement;
-    const DISTANCE_X = wrapperEl.clientWidth - wrapperEl.clientHeight - 12;
-
-    const targetX = isTurningOn ? DISTANCE_X : 0;
+    const targetX = isTurningOn ? getDistanceX() : 0;
     const { dangle, turn, speed, switch: switchSpeed, end, svgL, svgR } = jiggleSwitchConfigs[type];
     const bgColor = isTurningOn ? toggledColor : initialBgColor.current;
     const [initialPath, reversePath] = isTurningOn ? [svgL, svgR] : [svgR, svgL];
@@ -58,9 +70,9 @@ export const JiggleSwitch = ({
     const multiplier = isTurningOn ? 1 : -1;
 
     timeline
-      .set(gRef.current, { y: 0 }, 0)
+      .set(gRef.current, { y: 0, svgOrigin: '24 24' }, 0)
       .to(selfRef.current, { backgroundColor: bgColor, duration: 0.5, ease: 'power3.inOut' }, 0)
-      .to(gRef.current, { x: targetX, duration: switchSpeed, ease: 'power2.inOut' }, 0);
+      .to(svgRef.current, { x: targetX, duration: switchSpeed, ease: 'power2.inOut' }, 0);
 
     timeline.to(
       gradientRef.current,
@@ -88,8 +100,8 @@ export const JiggleSwitch = ({
     morph.timeScale(speed);
     timeline.add(morph, 0);
 
-    morph.set(pathRef.current, { transformOrigin: 'center center' });
-    morph.set(gRef.current, { transformOrigin: 'center center' });
+    // morph.set(pathRef.current, { transformOrigin: 'center center' });
+    // morph.set(gRef.current, { transformOrigin: 'center center' });
 
     if (!interrupted) {
       morph.to(pathRef.current, {
@@ -160,6 +172,11 @@ export const JiggleSwitch = ({
       (animation.current && animation.current.isActive() && animation.current.progress() < 0.3) ?? false;
 
     if (animation.current) {
+      prevState.current = {
+        rotate: gsap.getProperty(gRef.current, 'rotate'),
+        x: gsap.getProperty(gRef.current, 'x'),
+        y: gsap.getProperty(gRef.current, 'y'),
+      };
       animation.current.kill();
     }
 
@@ -206,6 +223,7 @@ export const JiggleSwitch = ({
           }}
         >
           <svg
+            ref={svgRef}
             style={{
               width: '100%',
               height: '100%',
