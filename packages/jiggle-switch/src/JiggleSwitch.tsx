@@ -19,10 +19,11 @@ export const JiggleSwitch = ({
   handleColors = { main: '#F9FAFB', shadow: '#a8a8ac' },
   ...props
 }: {
-  type: JiggleSwitchType;
+  type?: JiggleSwitchType;
   value?: boolean;
   onValue?: (e: boolean) => void;
   toggledColor?: string;
+  // `main` is the actual color of handle. `shadow` is used for gradient shadowing.
   handleColors?: { main: string; shadow: string };
   // how hardcore it shakes them for? [the elastic offset of the handle]
   aggro?: number;
@@ -30,7 +31,7 @@ export const JiggleSwitch = ({
   temperature?: number;
   // the more eros, the more force [multiplier to rotation degree]
   eros?: number;
-  // the more mass, the more drag! [some jelly scaling simulation multiplier]
+  // the more mass, the more drag! [some jelly smearing]
   mass?: number;
 }) => {
   const selfRef = useRef<HTMLDivElement>(null);
