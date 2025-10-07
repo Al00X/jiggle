@@ -1,25 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState} from 'react';
 import './App.css';
+import {JiggleSwitch, jiggleSwitchConfigs, JiggleSwitchType, jiggleSwitchTypes} from "./jiggle-switch";
 
 function App() {
+  const [type, setType] = useState<JiggleSwitchType>('droop');
+  const [toggle, setToggle] = useState(false);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+     <main style={{ width: '100vw', height: '100vh', display: 'flex', maxWidth: '60rem', margin: 'auto' }}>
+      <section
+        style={{
+          margin: 'auto',
+          width: '80%',
+          padding: '10rem',
+          backgroundColor: 'rgb(106, 44, 99)',
+        }}
+      >
+        <h1 style={{ fontWeight: 900, color: 'white', fontSize: '3rem' }}>JIGGLE SWITCH</h1>
+        <select
+          onChange={(e) => setType(e.currentTarget.value as any)}
+          style={{ alignSelf: 'start', marginLeft: '12rem',marginBottom: 0 }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          { jiggleSwitchTypes.map(key => <option key={key} value={key}>{ jiggleSwitchConfigs[key].name }</option>) }
+        </select>
+        <section
+          style={{
+            width: '100%',
+            marginTop: '0rem',
+            padding: '5rem',
+          }}
+        >
+          <JiggleSwitch type={type} value={toggle} onValue={setToggle} />
+        </section>
+      </section>
+    </main>
   );
 }
 
