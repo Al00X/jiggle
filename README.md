@@ -54,7 +54,7 @@ There are also some other hidden features and holes which are documented in the 
 
 ___
 
-## Why?
+## Why...?
 
 idk.
 
