@@ -8,8 +8,8 @@ html,
 body {
   background-color: #15181e;
   width: 100%;
-  overflow: hidden;
   color: white;
+  /*overflow: auto;*/
   font-weight: 600;
 }
 

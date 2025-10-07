@@ -32,8 +32,8 @@ export default function Home() {
       <section>
         <div className={`flex flex-col items-center justify-center`}>
           <div className={`inline-flex flex-col items-center relative`}>
-            <h1 className={`font-bold text-5xl text-center`}>JIGGLE SWITCH</h1>
-            <GithubButton className={`absolute -end-12`} />
+            <GithubButton className={`absolute -mt-8 sm:-mt-0 -right-8 sm:-right-12`} />
+            <h1 className={`font-bold text-5xl text-center w-48 sm:w-auto`}>JIGGLE SWITCH</h1>
             <select
               className={`self-start ms-10 mt-4 mb-8`}
               onChange={(e) => setType(e.currentTarget.value as any)}
