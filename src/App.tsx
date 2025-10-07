@@ -4,7 +4,7 @@ import {JiggleSwitch, jiggleSwitchConfigs, JiggleSwitchType, jiggleSwitchTypes} 
 
 function App() {
   const [type, setType] = useState<JiggleSwitchType>('droop');
-  const [toggle, setToggle] = useState(true);
+  const [toggle, setToggle] = useState(false);
 
   return (
      <main style={{ width: '100vw', height: '100vh', display: 'flex', maxWidth: '60rem', margin: 'auto' }}>
@@ -13,7 +13,7 @@ function App() {
           margin: 'auto',
           width: '80%',
           padding: '10rem',
-          backgroundColor: 'rgb(106, 44, 99)',
+          background: 'radial-gradient(#8f3985, #441c45)',
         }}
       >
         <h1 style={{ fontWeight: 900, color: 'white', fontSize: '3rem' }}>JIGGLE SWITCH</h1>

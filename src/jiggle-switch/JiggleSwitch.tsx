@@ -17,12 +17,22 @@ export const JiggleSwitch = ({
   onValue,
   toggledColor = '#34c759',
   handleColors = { main: '#F9FAFB', shadow: '#acacae' },
+  // handleColors = { main: '#F9FAFB', shadow: '#000000' },
+  ...props
 }: {
   type: JiggleSwitchType;
   value?: boolean;
   onValue?: (e: boolean) => void;
   toggledColor?: string;
   handleColors?: { main: string; shadow: string };
+  // how hardcore it shakes them for? [the elastic offset of the handle]
+  aggro?: number;
+  // the more hot, the more jiggly! [self-explanatory]
+  temperature?: number;
+  // the more eros, the more force [multiplier to rotation degree]
+  eros?: number;
+  // the more mass, the more drag! [some jelly scaling simulation multiplier]
+  mass?: number;
 }) => {
   const selfRef = useRef<HTMLDivElement>(null);
   const handleRef = useRef<HTMLDivElement>(null);
@@ -52,27 +62,137 @@ export const JiggleSwitch = ({
     // I'm using setTimeout cause getComputedStyle has delay.
     setTimeout(() => {
       gsap.set(selfRef.current, { backgroundColor: value ? toggledColor : initialBgColor.current });
-    }, 1)
-
+    }, 1);
   }, []);
 
   const createAnimation = (state: boolean, interrupted?: boolean) => {
     // gsap.set(gRef.current, prevState.current);
+
+    // TODO: idk why I did this, would benefits a refactor!
+    let overrides = {};
+    if (props.eros) overrides = { ...overrides, eros: props.eros };
+    if (props.aggro) overrides = { ...overrides, aggro: props.aggro };
+    if (props.temperature) overrides = { ...overrides, temperature: props.temperature };
+    if (props.mass) overrides = { ...overrides, mass: props.mass };
+
     const timeline = gsap.timeline({ paused: true });
 
     const isTurningOn = state;
 
     const targetX = isTurningOn ? getDistanceX() : 0;
-    const { dangle, turn, speed, switch: switchSpeed, end, svgL, svgR } = jiggleSwitchConfigs[type];
+    const {
+      dangle,
+      turn,
+      speed,
+      switch: switchSpeed,
+      end,
+      eros,
+      temperature,
+      aggro,
+      mass,
+      svgL,
+      svgR,
+    } = { ...jiggleSwitchConfigs[type], ...overrides };
     const bgColor = isTurningOn ? toggledColor : initialBgColor.current;
     const [initialPath, reversePath] = isTurningOn ? [svgL, svgR] : [svgR, svgL];
 
     const multiplier = isTurningOn ? 1 : -1;
 
+    // TODO: the animations are all over the place, the timelines need a cleanup and refactor.
+
     timeline
       .set(gRef.current, { y: 0, svgOrigin: '24 24' }, 0)
-      .to(selfRef.current, { backgroundColor: bgColor, duration: 0.5, ease: 'power3.inOut' }, 0)
-      .to(svgRef.current, { x: targetX, duration: switchSpeed, ease: 'power2.inOut' }, 0);
+      .to(selfRef.current, { backgroundColor: bgColor, duration: 0.5, ease: 'power3.inOut' }, 0);
+
+    const simulation = gsap.timeline();
+    simulation.timeScale(speed);
+    timeline.add(simulation, 0);
+
+    simulation
+      .to(
+        svgRef.current,
+        {
+          x: targetX + 12 * multiplier * aggro,
+          duration: switchSpeed,
+          ease: 'power2.inOut',
+        },
+        0,
+      )
+      .to(
+        svgRef.current,
+        {
+          y: 7 * temperature,
+          duration: 0.3,
+          ease: 'power2.inOut',
+        },
+        '<0.2',
+      )
+
+      .to(
+        svgRef.current,
+        {
+          y: -4 * temperature,
+          duration: 0.3,
+          ease: 'power2.inOut',
+        },
+        '>-0.2',
+      )
+      .to(
+        svgRef.current,
+        {
+          y: 0,
+          duration: 0.5,
+          ease: 'power2.out',
+        },
+        '>',
+      )
+      // .to(
+      //   svgRef.current,
+      //   {
+      //     y: 5,
+      //     duration: 0.5,
+      //     ease: 'power2.inOut',
+      //   },
+      //   '>-0.5',
+      // )
+      .to(
+        svgRef.current,
+        {
+          x: targetX,
+          // y: 0,
+          duration: 0.5,
+          ease: 'power2.inOut',
+        },
+        '<',
+      );
+
+    simulation
+      .to(
+        pathRef.current,
+        { duration: 0.3, scaleX: 1 - 0.04 * mass, scaleY: 1 + 0.045 * mass, ease: 'power2.inOut' },
+        0,
+      )
+      .to(pathRef.current, { duration: 0.15, scaleX: 1, scaleY: 1, ease: 'power1.inOut' }, '<0.2')
+      .to(
+        pathRef.current,
+        { duration: 0.2, scaleX: 1 + 0.05 * mass, scaleY: 1 - 0.05 * mass, ease: 'power2.inOut' },
+        '<0.2',
+      )
+      .to(pathRef.current, { duration: 0.3, scaleX: 1, scaleY: 1, ease: 'power1.inOut' }, '<0.2');
+
+    simulation.to(
+      svgRef.current,
+      {
+        duration: 0.21,
+        scaleY: 1.04,
+        scaleX: 0.96,
+        repeat: 5,
+        delay: 0.04,
+        yoyo: true,
+        ease: 'circ.inOut',
+      },
+      0,
+    );
 
     timeline.to(
       gradientRef.current,
@@ -81,6 +201,7 @@ export const JiggleSwitch = ({
         ease: 'power1.inOut',
         attr: {
           cx: isTurningOn ? 20 : 8,
+          // fx: isTurningOn ? 0 : 36,
         },
       },
       0,
@@ -100,7 +221,7 @@ export const JiggleSwitch = ({
     morph.timeScale(speed);
     timeline.add(morph, 0);
 
-    // morph.set(pathRef.current, { transformOrigin: 'center center' });
+    morph.set(pathRef.current, { svgOrigin: '24 0' });
     // morph.set(gRef.current, { transformOrigin: 'center center' });
 
     if (!interrupted) {
@@ -111,7 +232,7 @@ export const JiggleSwitch = ({
       });
     }
 
-    morph.to(gRef.current, { duration: 0.3, rotate: dangle[0] * multiplier, ease: 'power2.out' }, '<');
+    morph.to(gRef.current, { duration: 0.3, rotate: dangle[0] * multiplier * eros, ease: 'power2.out' }, '<');
 
     morph.addLabel('morphed');
 
@@ -120,11 +241,12 @@ export const JiggleSwitch = ({
       ease: 'power1.out',
       morphSVG: reversePath,
     });
+
     morph.to(
       gRef.current,
       {
         duration: 0.45,
-        rotate: dangle[1] * multiplier,
+        rotate: dangle[1] * multiplier * eros,
         ease: 'power2.out',
       },
       '<',
@@ -135,18 +257,24 @@ export const JiggleSwitch = ({
       {
         duration: 0.5,
         delay: 0.12,
-        rotate: dangle[2] * multiplier,
+        rotate: dangle[2] * multiplier * eros,
         ease: 'power2.out',
       },
       '=-0.1',
     );
 
+    // morph.to(gRef.current, {
+    //   duration: 0.9,
+    //   rotate: 0 * multiplier,
+    //   y: 0,
+    //   ease: 'bounce.out',
+    // });
     morph.to(gRef.current, {
       duration: 0.9,
-      rotate: 0 * multiplier,
-      y: 0,
-      ease: 'bounce.out',
+      rotate: (dangle[1] / 2) * multiplier * eros,
+      ease: 'power1.out',
     });
+
     morph.to(pathRef.current, { duration: end ?? 0.8, ease: 'power1.out', morphSVG: initialCirclePath }, '<-0.5');
 
     morph.to(
@@ -189,7 +317,9 @@ export const JiggleSwitch = ({
       className={'jiggle-switch'}
       ref={selfRef}
       onClick={handleClick}
-      onKeyDown={handleClick}
+      onKeyDown={(e) => {
+        if (e.key === ' ' || e.key === 'Enter') handleClick();
+      }}
       tabIndex={0}
       style={{
         position: 'relative',
@@ -236,9 +366,11 @@ export const JiggleSwitch = ({
               <radialGradient
                 ref={gradientRef}
                 gradientUnits="userSpaceOnUse"
-                cx="8"
-                cy="40"
-                r="40"
+                cx={8}
+                cy={30}
+                // fx={24}
+                // fy={48}
+                r={35}
                 id="gradient-0"
                 gradientTransform="matrix(1.9956547,0.78867229,-0.84933151,2.1491466,35.584364,-45.877413)"
               >
