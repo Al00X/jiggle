@@ -16,8 +16,7 @@ export const JiggleSwitch = ({
   value,
   onValue,
   toggledColor = '#34c759',
-  handleColors = { main: '#F9FAFB', shadow: '#acacae' },
-  // handleColors = { main: '#F9FAFB', shadow: '#000000' },
+  handleColors = { main: '#F9FAFB', shadow: '#a8a8ac' },
   ...props
 }: {
   type: JiggleSwitchType;
@@ -68,12 +67,12 @@ export const JiggleSwitch = ({
   const createAnimation = (state: boolean, interrupted?: boolean) => {
     // gsap.set(gRef.current, prevState.current);
 
-    // TODO: idk why I did this, would benefits a refactor!
-    let overrides = {};
-    if (props.eros) overrides = { ...overrides, eros: props.eros };
-    if (props.aggro) overrides = { ...overrides, aggro: props.aggro };
-    if (props.temperature) overrides = { ...overrides, temperature: props.temperature };
-    if (props.mass) overrides = { ...overrides, mass: props.mass };
+    let overrides: any = {};
+    for(const key in props) {
+      const value = (props as any)[key];
+      if (value === undefined) continue;
+      overrides[key] = value;
+    }
 
     const timeline = gsap.timeline({ paused: true });
 
@@ -169,23 +168,24 @@ export const JiggleSwitch = ({
     simulation
       .to(
         pathRef.current,
-        { duration: 0.3, scaleX: 1 - 0.04 * mass, scaleY: 1 + 0.045 * mass, ease: 'power2.inOut' },
+        { duration: 0.25, scaleX: 1 - 0.04 * mass, scaleY: 1 + 0.045 * mass, ease: 'power2.inOut' },
         0,
       )
-      .to(pathRef.current, { duration: 0.15, scaleX: 1, scaleY: 1, ease: 'power1.inOut' }, '<0.2')
+      .to(pathRef.current, { duration: 0.2, scaleX: 1.02, scaleY: 0.95, ease: 'power2.out' }, '<0.3')
+      .to(pathRef.current, { duration: 0.5, scaleX: 1, scaleY: 1, ease: 'power2.out' }, '<0.4')
       .to(
         pathRef.current,
-        { duration: 0.2, scaleX: 1 + 0.05 * mass, scaleY: 1 - 0.05 * mass, ease: 'power2.inOut' },
-        '<0.2',
+        { duration: 0.25, scaleX: 1 + 0.05, scaleY: 1 - 0.05, ease: 'power2.inOut' },
+        '<0.25',
       )
-      .to(pathRef.current, { duration: 0.3, scaleX: 1, scaleY: 1, ease: 'power1.inOut' }, '<0.2');
+      .to(pathRef.current, { duration: 0.4, scaleX: 1, scaleY: 1, ease: 'power1.out' }, '<0.8');
 
     simulation.to(
       svgRef.current,
       {
         duration: 0.21,
-        scaleY: 1.04,
-        scaleX: 0.96,
+        scaleY: 1 + (temperature * 0.03),
+        scaleX: 1 - (temperature * 0.03),
         repeat: 5,
         delay: 0.04,
         yoyo: true,
@@ -200,8 +200,8 @@ export const JiggleSwitch = ({
         duration: switchSpeed,
         ease: 'power1.inOut',
         attr: {
-          cx: isTurningOn ? 20 : 8,
-          // fx: isTurningOn ? 0 : 36,
+          cx: isTurningOn ? 30 : 19,
+          fx: isTurningOn ? 30 : 19,
         },
       },
       0,
@@ -365,14 +365,20 @@ export const JiggleSwitch = ({
             <defs>
               <radialGradient
                 ref={gradientRef}
-                gradientUnits="userSpaceOnUse"
-                cx={8}
-                cy={30}
-                // fx={24}
-                // fy={48}
-                r={35}
                 id="gradient-0"
-                gradientTransform="matrix(1.9956547,0.78867229,-0.84933151,2.1491466,35.584364,-45.877413)"
+                gradientUnits="userSpaceOnUse"
+
+                r={37}
+                fy={50}
+                fx={18}
+                cy={50}
+                cx={18}
+                gradientTransform="matrix(2.0341865,0.41486913,-0.40149099,1.9685908,-1.6035666,-50.369701)"
+
+                // cx={8}
+                // cy={30}
+                // r={33}
+                // gradientTransform="matrix(1.9956547,0.78867229,-0.84933151,2.1491466,35.584364,-45.877413)"
               >
                 <stop offset="0" style={{ stopColor: handleColors.main }}></stop>
                 <stop ref={stopColorRef} offset="1" style={{ stopColor: handleColors.main }}></stop>

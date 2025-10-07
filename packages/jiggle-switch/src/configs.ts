@@ -1,3 +1,4 @@
+// TODO: focal point
 
 export const jiggleSwitchConfigs = {
   droop: {
@@ -29,7 +30,7 @@ export const jiggleSwitchConfigs = {
     turn: 0.1,
     end: undefined,
     temperature: 1.3,
-    mass: 1.5,
+    mass: 2.1,
     aggro: 0.1,
     eros: 0.92,
     svgL: `M 41.7,24.7
@@ -48,7 +49,7 @@ export const jiggleSwitchConfigs = {
     speed: 1,
     turn: 0.5,
     end: undefined,
-    temperature: 1,
+    temperature: 0.55,
     mass: 1.5,
     aggro: 1.1,
     eros: 0.8,
