@@ -12,7 +12,7 @@ Got tired? bored? not in the mood? mad?
 ___
 ## Demo
 
-You can try ours switches before ordering, just [visit the switch showcase](al00x.github.io/jiggle/)!
+You can try ours switches before ordering, just [visit the switch showcase](https://al00x.github.io/jiggle/)!
 
 ___
 
