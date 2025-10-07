@@ -180,16 +180,21 @@ export const JiggleSwitch = ({
       )
       .to(pathRef.current, { duration: 0.4, scaleX: 1, scaleY: 1, ease: 'power1.out' }, '<0.8');
 
+    const MINOR_JIGGLE_FACTOR = 0.02
     simulation.to(
       svgRef.current,
       {
-        duration: 0.21,
-        scaleY: 1 + (temperature * 0.03),
-        scaleX: 1 - (temperature * 0.03),
-        repeat: 5,
-        delay: 0.04,
+        keyframes: {
+          scaleX: [1 + (temperature * MINOR_JIGGLE_FACTOR), 1 - (temperature * MINOR_JIGGLE_FACTOR)],
+          scaleY: [1 - (temperature * MINOR_JIGGLE_FACTOR), 1 + (temperature * MINOR_JIGGLE_FACTOR)]
+        },
+        duration: 0.2,
+        // scaleY: 1 + (temperature * (SPECIAL_JIGGLER ? 0.04 : 0.03)),
+        // scaleX: 1 - (temperature * (SPECIAL_JIGGLER ? 0.04 : 0.03)),
+        repeat: 4,
+        delay: 0,
         yoyo: true,
-        ease: 'circ.inOut',
+        ease: 'sine.inOut',
       },
       0,
     );
@@ -239,7 +244,9 @@ export const JiggleSwitch = ({
     morph.to(pathRef.current, {
       duration: turn,
       ease: 'power1.out',
-      morphSVG: reversePath,
+      morphSVG: {
+        shape: reversePath,
+      },
     });
 
     morph.to(
