@@ -19,6 +19,8 @@ export const config = [
     },
     rules: {
       "turbo/no-undeclared-env-vars": "warn",
+      "no-explicit-any": "off",
+      "@typescript-eslint/ban-ts-comment": "off"
     },
   },
   {

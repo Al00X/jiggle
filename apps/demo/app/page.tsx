@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
-import './App.css';
-import {JiggleSwitch, jiggleSwitchConfigs, JiggleSwitchType, jiggleSwitchTypes} from "./jiggle-switch";
+'use client';
 
-function App() {
-  const [type, setType] = useState<JiggleSwitchType>('droop');
+import React, { useState } from "react";
+import { JiggleSwitch, jiggleSwitchConfigs, JiggleSwitchType, jiggleSwitchTypes } from "@al00x/jiggle-switch";
+
+export default function Home() {
+   const [type, setType] = useState<JiggleSwitchType>('droop');
   const [toggle, setToggle] = useState(false);
 
   return (
@@ -21,7 +22,7 @@ function App() {
           onChange={(e) => setType(e.currentTarget.value as any)}
           style={{ alignSelf: 'start', marginLeft: '12rem',marginBottom: 0 }}
         >
-          { jiggleSwitchTypes.map(key => <option key={key} value={key}>{ jiggleSwitchConfigs[key].name }</option>) }
+          { jiggleSwitchTypes.map((key) => <option key={key} value={key}>{ jiggleSwitchConfigs[key].name }</option>) }
         </select>
         <section
           style={{
@@ -36,5 +37,3 @@ function App() {
     </main>
   );
 }
-
-export default App;

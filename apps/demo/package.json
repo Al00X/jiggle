@@ -1,20 +1,22 @@
 {
-  "name": "docs",
+  "name": "demo",
   "version": "0.1.0",
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack --port 3001",
+    "dev": "next dev --turbopack --port 3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint --max-warnings 0",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@repo/ui": "*",
+    "@al00x/jiggle-switch": "*",
     "next": "^15.5.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "@gsap/react": "^2.1.2",
+    "gsap": "^3.13.0"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",

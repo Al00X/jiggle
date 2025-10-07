@@ -107,13 +107,13 @@ export const jiggleSwitchConfigs = {
     name: 'Doubl',
     dangle: [20, -15, 45],
     switch: 0.6,
-    speed: 0.8,
+    speed: 0.95,
     turn: 0.2,
     end: 0.5,
     temperature: 2.4,
-    mass: 0.5,
-    aggro: 1.6,
-    eros: 1.6,
+    mass: 0.6,
+    aggro: 1.7,
+    eros: 1.8,
     svgL: `M 18.1,2.3
   C 7.2,6.2 4.6,9.7 2.3,13.9
   c -5.4,9.7 -8.5,19.8 -18.7,22.4 -1.5,0.4 -2.7,-1.7 -3.5,1.8 -1.3,5.4 -7.4,18.3 6.7,26.4 3.7,2.1 14.9,1.4 19.6,-1.7
