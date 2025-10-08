@@ -1,4 +1,4 @@
-![switch-preview.webp](switch-preview.webp)
+![switch-preview.webp](.github/switch-preview.webp)
 # 🟣 Jiggle Switch 🟣
 ### The only switch the world needs right now. 
 ___
