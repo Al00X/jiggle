@@ -2,7 +2,7 @@
   "name": "@al00x/jiggle-switch",
   "description": "A Switch that jiggles, also does things I cant tell here...!",
   "keywords": ["switch", "toggle", "ui", "component", "react", "animation", "realism", "shake"],
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": false,
   "author": "Al00X",
   "repository": {
