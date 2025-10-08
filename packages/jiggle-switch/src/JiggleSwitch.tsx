@@ -356,7 +356,7 @@ export const JiggleSwitch = ({
             position: 'absolute',
             top: '0px',
             left: '0px',
-            aspectRatio: 'square',
+            aspectRatio: 1,
             height: '100%',
           }}
         >
