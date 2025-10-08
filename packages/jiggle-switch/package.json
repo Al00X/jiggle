@@ -1,7 +1,13 @@
 {
   "name": "@al00x/jiggle-switch",
-  "version": "1.0.1",
+  "description": "A Switch that jiggles, also does things I cant tell here...!",
+  "keywords": ["switch", "toggle", "ui", "component", "react", "animation", "realism", "shake"],
+  "version": "1.0.2",
   "private": false,
+  "author": "Al00X",
+  "repository": {
+    "url": "https://github.com/Al00X/jiggle"
+  },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
