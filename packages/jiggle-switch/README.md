@@ -3,4 +3,4 @@
 ### The only switch the world needs right now. 
 ___
 
-check out [GitHub](https://github.com/Al00X/jiggle) for more information.
+check out [this GitHub link](https://github.com/Al00X/jiggle) for more information.
