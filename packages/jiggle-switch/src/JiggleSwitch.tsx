@@ -90,11 +90,17 @@ export const JiggleSwitch = ({
       temperature,
       aggro,
       mass,
+      fixedDirection,
       svgL,
       svgR,
     } = { ...jiggleSwitchConfigs[type], ...overrides };
     const bgColor = isTurningOn ? toggledColor : initialBgColor.current;
-    const [initialPath, reversePath] = isTurningOn ? [svgL, svgR] : [svgR, svgL];
+    let [initialPath, reversePath] = isTurningOn ? [svgL, svgR] : [svgR, svgL];
+
+    if (fixedDirection === 'LtoR') {
+      initialPath = svgL;
+      reversePath = svgR;
+    }
 
     const multiplier = isTurningOn ? 1 : -1;
 
